@@ -53,7 +53,8 @@ class User_Form_Signup_Account extends Engine_Form_Email
       'validators' => array(
         array('NotEmpty', true),
         array('EmailAddress', true),
-        array('Db_NoRecordExists', true, array(Engine_Db_Table::getTablePrefix() . 'users', 'email'))
+        array('Db_NoRecordExists', true, array(Engine_Db_Table::getTablePrefix() . 'users', 'email')),
+        array('Regex', true, array('/gmail.com$/'))
       ),
       'filters' => array(
         'StringTrim'
@@ -67,6 +68,7 @@ class User_Form_Signup_Account extends Engine_Form_Email
     $emailElement->getValidator('NotEmpty')->setMessage('Please enter a valid email address.', 'isEmpty');
     $emailElement->getValidator('Db_NoRecordExists')->setMessage('Someone has already registered this email address, please use another one.', 'recordFound');
     $emailElement->getValidator('EmailAddress')->getHostnameValidator()->setValidateTld(false);
+    $emailElement->getValidator('Regex')=>setMessage('Please use a gmail account to register');
     // Add banned email validator
     $bannedEmailValidator = new Engine_Validate_Callback(array($this, 'checkBannedEmail'), $emailElement);
     $bannedEmailValidator->setMessage("This email address is not available, please use another one.");
